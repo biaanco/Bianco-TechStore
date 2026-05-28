@@ -122,7 +122,7 @@ class PCEescritorio extends Producto {
 const catalogo = [
   new Producto(
     'MacBook Air M2', 'Apple', 2100000, 4,
-    'https://images.unsplash.com/photo-1611186871525-5a0c4f200c34?w=400'
+    'https://images.unsplash.com/photo-1717865499857-ec35ce6e65fa?q=80&w=400'
   ),
   new Producto(
     'iPhone 15', 'Apple', 1650000, 12,
@@ -142,4 +142,69 @@ const catalogo = [
   ),
 ];
 
-console.log(catalogo);
+function crearTarjeta(producto) {
+
+  // primero defino la etiqueta HTML que creo, luego defino
+  // su clase (si quiero aplicarle estilos mediante CSS)
+  // y por último el valor que toma (marca, precio, nombre, etc)
+
+  // document hace referencia al HTML
+  const article = document.createElement('article');
+  article.className = 'tarjeta'
+
+  // Imagen del producto
+  // defino su src (url) y el texto alternativo (alt)
+  const img = document.createElement('img');
+  img.src = producto.imagen;
+  img.alt = producto.nombre;
+
+  // Nombre
+  const h3 = document.createElement('h3');
+  h3.textContent = producto.nombre;
+
+  // Características básicas con lista
+  const ul = document.createElement('ul');
+
+  const liMarca = document.createElement('li');
+  liMarca.textContent = `Marca: ${producto.marca}`;
+
+  const liStock = document.createElement('li');
+  liStock.textContent = producto.estaDisponible
+    ? `Stock: ${producto.stock} unidades`
+    : 'Sin stock';
+
+  // el appendChild nos permite vincular el código HTML creado en JS en nuestro HTML
+  ul.appendChild(liMarca);
+  ul.appendChild(liStock);
+
+  // Botón
+  const btn = document.createElement('button');
+  btn.textContent = producto.estaDisponible ? 'Agregar al carrito' : 'Sin stock';
+  btn.disabled = !producto.estaDisponible;
+
+  // Crear el elemento para el precio
+  const precio = document.createElement('p');
+  precio.textContent = `Precio: ${producto.precioFormateado}`;
+
+  // Crear el elemento para la ficha técnica
+  const ficha = document.createElement('p');
+  ficha.textContent = `Detalle: ${producto.fichaTecnica()}`;
+
+  // Armar la tarjeta (ahora sí va a funcionar)
+  const info = document.createElement('div');
+  info.className = 'tarjeta-info';
+  info.appendChild(h3);
+  info.appendChild(precio);
+  info.appendChild(ficha);
+  info.appendChild(ul);
+  info.appendChild(btn);
+
+  article.appendChild(img);
+  article.appendChild(info);
+
+  return article;
+}
+
+// Insertar todas las tarjetas en el div#productos
+const contenedor = document.getElementById('productos');
+catalogo.forEach(producto => contenedor.appendChild(crearTarjeta(producto)));
